@@ -1,0 +1,9 @@
+{
+  "name": "melo-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Melo landing page and email relay service",
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}

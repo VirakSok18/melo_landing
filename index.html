@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melo | Music made for how you feel</title>
+  <meta name="description" content="A personal music app that matches your mood, plays clean music, and keeps you immersed.">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="Logo.png">
+  <link rel="apple-touch-icon" href="Logo.png">
+
+  <!-- Open Graph for Telegram / WhatsApp previews -->
+  <meta property="og:title" content="Melo | Music made for how you feel">
+  <meta property="og:description" content="Instant mood playlists, synced lyrics, and offline listening. Download the app.">
+  <meta property="og:image" content="Logo.png">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #000000;
+      --card: #101010;
+      --card-hover: #161616;
+      --border: #222222;
+      --border-hover: #333333;
+      --primary: #514AED;
+      --primary-hover: #433bc9;
+      --primary-light: #7B75FF;
+      --text: #ffffff;
+      --text-muted: #888888;
+      --text-sub: #b3b3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 32px;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .nav-btn {
+      background: #141414;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn:hover {
+      background: #1f1f1f;
+      border-color: var(--border-hover);
+    }
+
+    /* Shared Content Banner (for deep links) */
+    .shared-banner {
+      display: none;
+      max-width: 540px;
+      margin: 10px auto 20px;
+      padding: 16px 20px;
+      background: #141414;
+      border: 1px solid var(--primary);
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .shared-banner h3 {
+      font-size: 15px;
+      color: var(--primary-light);
+      margin-bottom: 4px;
+    }
+
+    .shared-banner p {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .open-app-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 820px;
+      margin: 50px auto 30px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 50px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 18px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    /* Soundwave */
+    .soundwave-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      height: 32px;
+      margin-bottom: 36px;
+    }
+
+    .bar {
+      width: 4px;
+      background: var(--primary);
+      border-radius: 3px;
+      animation: soundwave 1.2s ease-in-out infinite alternate;
+    }
+
+    .bar:nth-child(1) { height: 12px; animation-delay: 0.1s; }
+    .bar:nth-child(2) { height: 26px; animation-delay: 0.3s; }
+    .bar:nth-child(3) { height: 32px; animation-delay: 0.5s; }
+    .bar:nth-child(4) { height: 18px; animation-delay: 0.2s; }
+    .bar:nth-child(5) { height: 28px; animation-delay: 0.4s; }
+    .bar:nth-child(6) { height: 14px; animation-delay: 0.15s; }
+    .bar:nth-child(7) { height: 30px; animation-delay: 0.6s; }
+
+    @keyframes soundwave {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1.1); }
+    }
+
+    /* Download Box */
+    .download-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 60px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 42px;
+      border-radius: 32px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-download:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .download-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Bento Grid */
+    .bento-section {
+      max-width: 1000px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+
+    .bento-header {
+      margin-bottom: 28px;
+    }
+
+    .bento-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .bento-header p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .bento-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-card:hover {
+      background: var(--card-hover);
+      border-color: var(--border-hover);
+    }
+
+    .card-half {
+      grid-column: span 6;
+    }
+
+    .card-third {
+      grid-column: span 4;
+    }
+
+    .card-full {
+      grid-column: span 12;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary-light);
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* Getting started / Install section */
+    .start-section {
+      max-width: 1000px;
+      margin: 20px auto 80px;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    .start-card {
+      background: #111111;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .start-text h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .start-text p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .start-action .btn-start {
+      background: #fff;
+      color: #000;
+      padding: 12px 28px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .start-action .btn-start:hover {
+      background: #e6e6e6;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        margin: 32px auto 20px;
+      }
+      .hero-title {
+        font-size: 34px;
+        letter-spacing: -1px;
+      }
+      .hero-subtitle {
+        font-size: 15px;
+        margin-bottom: 28px;
+      }
+      .bento-header h2 {
+        font-size: 24px;
+      }
+      .card-half, .card-third, .card-full {
+        grid-column: span 12;
+      }
+      .bento-card {
+        padding: 22px;
+      }
+      .btn-download {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 16px;
+      }
+      .download-box {
+        margin-bottom: 50px;
+      }
+      .start-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px;
+      }
+      .start-action {
+        width: 100%;
+      }
+      .start-action .btn-start {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+      }
+      header {
+        padding: 16px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 28px;
+      }
+      .hero-subtitle {
+        font-size: 14px;
+      }
+      .logo-text {
+        font-size: 20px;
+      }
+      .nav-btn span {
+        display: none;
+      }
+      .nav-btn {
+        padding: 8px 12px;
+        border-radius: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="/" class="logo-container">
+      <img src="Logo.png" alt="Melo" class="logo-img">
+      <span class="logo-text">Melo</span>
+    </a>
+    <a href="melo.apk" download="melo.apk" class="nav-btn">
+      <i class="fa-solid fa-download"></i>
+      <span>Get App</span>
+    </a>
+  </header>
+
+  <!-- Dynamic Shared Banner -->
+  <div id="sharedBanner" class="shared-banner">
+    <h3 id="sharedTitle"><i class="fa-solid fa-music"></i> Shared with you</h3>
+    <p id="sharedSubtitle">Open this directly inside Melo</p>
+    <a id="openAppBtn" href="#" class="open-app-btn">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in Melo
+    </a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero-title">Music made for how you feel.</h1>
+    <p class="hero-subtitle">
+      Tell Melo your mood to get instant tailored playlists, synced lyrics, and clean music without interruptions.
+    </p>
+
+    <!-- Animated soundwave -->
+    <div class="soundwave-container">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <!-- Download Action -->
+    <div class="download-box">
+      <a href="melo.apk" download="melo.apk" class="btn-download" id="downloadMainBtn">
+        <i class="fa-brands fa-android"></i>
+        <span>Download for Android</span>
+      </a>
+
+      <div class="download-meta">
+        <span>Version 1.0.4</span>
+        <span>•</span>
+        <span>Android 8.0+</span>
+        <span>•</span>
+        <span>~80 MB</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Human-centered Bento Grid -->
+  <section class="bento-section">
+    <div class="bento-header">
+      <h2>Built for how you actually listen</h2>
+      <p>No endless searching. Just good music that matches your moment.</p>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Feature 1: Playlist Generator -->
+      <div class="bento-card card-half">
+        <div>
+          <div class="card-tag">Playlist Generator</div>
+          <div class="card-title">Describe your mood, get your soundtrack.</div>
+          <div class="card-desc">
+            Type or speak whatever is on your mind. Melo understands the nuance of your prompt, finds the right songs, syncs lyrics, and delivers a complete playlist instantly.
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: Music Identity -->
+      <div class="bento-card card-half">
+        <div>
+          <div class="card-tag">Music Identity</div>
+          <div class="card-title">Learns and adapts to your taste.</div>
+          <div class="card-desc">
+            Your taste profile shapes your music. Melo learns from your natural listening behavior, what you finish, skip, or replay, keeping your daily recommendations accurate.
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Listen Together -->
+      <div class="bento-card card-half">
+        <div>
+          <div class="card-tag">Listen Together</div>
+          <div class="card-title">Real time shared listening.</div>
+          <div class="card-desc">
+            Connect with friends in live shared sessions. See what your friends are playing right now, tap to join, and listen in exact real time sync together.
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4: Offline Mode -->
+      <div class="bento-card card-half">
+        <div>
+          <div class="card-tag">Offline Mode</div>
+          <div class="card-title">Take your music anywhere.</div>
+          <div class="card-desc">
+            Download your favorite tracks and playlists directly to your device for seamless offline playback without using mobile data.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simple Install Section -->
+  <section class="start-section">
+    <div class="start-card">
+      <div class="start-text">
+        <h3>Ready to try Melo?</h3>
+        <p>Direct APK download for Android phones. Install in seconds.</p>
+      </div>
+      <div class="start-action">
+        <a href="melo.apk" download="melo.apk" class="btn-start">
+          <i class="fa-solid fa-download"></i>
+          <span>Download APK</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Melo Music. Simple, personal, and ad free.</p>
+  </footer>
+
+  <script>
+    function launchMelo(path) {
+      // Direct custom scheme: opens Melo if installed, does not redirect to Play Store
+      window.location.href = `melo://${path}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const playlistId = params.get('playlist');
+      const profileUser = params.get('profile');
+      const songId = params.get('song');
+
+      const banner = document.getElementById('sharedBanner');
+      const title = document.getElementById('sharedTitle');
+      const subtitle = document.getElementById('sharedSubtitle');
+      const openBtn = document.getElementById('openAppBtn');
+
+      let targetPath = '';
+
+      if (playlistId) {
+        banner.style.display = 'block';
+        title.innerHTML = '<i class="fa-solid fa-record-vinyl"></i> Shared Playlist';
+        subtitle.innerText = 'Someone shared a playlist with you on Melo';
+        targetPath = `playlist/${playlistId}`;
+      } else if (profileUser) {
+        banner.style.display = 'block';
+        title.innerHTML = '<i class="fa-solid fa-user"></i> Shared Profile';
+        subtitle.innerText = `@${profileUser}'s profile on Melo`;
+        targetPath = `profile/${profileUser}`;
+      } else if (songId) {
+        banner.style.display = 'block';
+        title.innerHTML = '<i class="fa-solid fa-music"></i> Shared Song';
+        subtitle.innerText = 'Listen to this track on Melo';
+        targetPath = `song/${songId}`;
+      }
+
+      if (targetPath) {
+        openBtn.href = `melo://${targetPath}`;
+        openBtn.onclick = (e) => {
+          launchMelo(targetPath);
+        };
+      }
+    });
+  </script>
+</body>
+</html>
