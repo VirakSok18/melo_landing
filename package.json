@@ -4,7 +4,6 @@
   "private": true,
   "description": "Melo landing page and email relay service",
   "dependencies": {
-    "@supabase/supabase-js": "^2.48.1",
     "nodemailer": "^6.9.16"
   }
 }
