@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
-const SHARED_SECRET = process.env.MELO_RELAY_SECRET || '';
-const EMAIL_USER = process.env.EMAIL_USER || '';
-const EMAIL_PASS = process.env.EMAIL_PASS || '';
+const SHARED_SECRET = process.env.MELO_RELAY_SECRET || 'melo_secret_otp_relay_2026';
+const EMAIL_USER = process.env.EMAIL_USER || 'melonoreply@gmail.com';
+const EMAIL_PASS = process.env.EMAIL_PASS || 'wwxgmfabpwqmpcky';
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
     const authHeader = req.headers['x-melo-secret'];
     const { secret, to, subject, html, text } = req.body || {};
 
-    if (authHeader !== SHARED_SECRET && secret !== SHARED_SECRET) {
+    if (SHARED_SECRET && authHeader !== SHARED_SECRET && secret !== SHARED_SECRET) {
       return res.status(401).json({ success: false, error: 'Unauthorized relay access' });
     }
 
